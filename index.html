@@ -9,61 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals -->
-    <!-- Application Structure Plan: The application is structured into four thematic sections accessible via a top navigation bar: 1) An introduction to Taguchi's core philosophy. 2) An interactive comparison of Offline vs. Online engineering to clarify their roles. 3) A dynamic "Quality Loss Function (QLF) Explorer" which is the centerpiece, allowing users to manipulate variables and see the financial impact in real-time via a chart, making the abstract concept tangible. 4) A tabbed reference guide for the three types of quality characteristics. This structure was chosen to guide the user from foundational concepts to practical application and reference, facilitating a more intuitive learning journey than a linear report. -->
-    <!-- Visualization & Content Choices: 
-        - Report Info: Offline vs. Online Engineering -> Goal: Compare -> Viz/Method: Interactive Tabs (HTML/JS) -> Interaction: Click to switch content -> Justification: Engages user and saves space.
-        - Report Info: QLF Formula -> Goal: Demonstrate financial impact of deviation -> Viz/Method: Interactive Line Chart (Chart.js/Canvas) with sliders/inputs -> Interaction: User adjusts values to see real-time chart and loss calculation -> Justification: Transforms a static formula into an exploratory tool, providing the "wow" factor and deep understanding.
-        - Report Info: Three Quality Characteristics -> Goal: Organize and differentiate -> Viz/Method: Tabbed Interface (HTML/JS) -> Interaction: Click to view details for each type -> Justification: Standard, clean UI for categorized information, preventing cognitive overload from a long list.
-        - Report Info: Offline Engineering Stages -> Goal: Show process -> Viz/Method: Styled Flexbox Diagram (HTML/Tailwind) -> Interaction: Static visual flow -> Justification: Clearly illustrates the sequence of design stages. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #FDFBF8;
-            color: #4A4A4A;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 40vh;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
-            }
-        }
-        .nav-link {
-            transition: color 0.3s, border-color 0.3s;
-            border-bottom: 2px solid transparent;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: #D97706; /* amber-600 */
-            border-bottom-color: #D97706;
-        }
-        .tab-button {
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .tab-button.active {
-            background-color: #D97706;
-            color: white;
-        }
-        .card {
-            background-color: #FFFFFF;
-            border: 1px solid #F3F4F6; /* gray-100 */
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
-        }
-    </style>
+    <!-- El archivo de estilo se importa aquí -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="antialiased">
 
@@ -90,58 +37,43 @@
         <section id="filosofia" class="mb-16 text-center">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">La Filosofía de Calidad de Genichi Taguchi</h2>
             <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8">
-                Esta sección introduce los pilares del pensamiento de Taguchi. Su enfoque revolucionó la gestión de la calidad al centrarse en el diseño robusto para minimizar la variabilidad y la "pérdida social" que genera un producto, en lugar de simplemente cumplir con las especificaciones.
+                Taguchi define la calidad en términos de la pérdida generada por el producto a la sociedad. Dicha pérdida puede ser estimada desde el momento en que un producto es despachado hasta el final de su vida útil. El objetivo es construir la calidad intrínsecamente en el producto.
             </p>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-amber-700 mb-2">Calidad Robusta</h3>
-                    <p class="text-gray-600">Diseñar productos y procesos insensibles a factores incontrolables ("ruido"), asegurando un rendimiento consistente en condiciones reales.</p>
-                </div>
-                <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-amber-700 mb-2">Función de Pérdida (QLF)</h3>
-                    <p class="text-gray-600">Cuantificar en términos monetarios la pérdida para la sociedad causada por cualquier desviación del valor objetivo ideal, incluso dentro de la tolerancia.</p>
-                </div>
-                <div class="card p-6">
-                    <h3 class="text-xl font-semibold text-amber-700 mb-2">Calidad Orientada a Objetivos</h3>
-                    <p class="text-gray-600">El objetivo no es estar "dentro de los límites", sino acercarse lo más posible al valor nominal ideal para minimizar la pérdida y maximizar el valor.</p>
-                </div>
-            </div>
         </section>
 
         <section id="metodologias" class="mb-16">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Ingeniería de Calidad: En Línea vs. Fuera de Línea</h2>
             <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
-                Taguchi divide la ingeniería de calidad en dos fases complementarias. La fase "Fuera de Línea" es proactiva y se enfoca en el diseño, mientras que la "En Línea" es reactiva y se aplica durante la producción. Explore sus diferencias para entender por qué Taguchi prioriza el diseño robusto desde el inicio.
+                El control de calidad se divide en dos enfoques principales. Explore las diferencias para entender cómo la ingeniería "fuera de la línea" busca la prevención, mientras que la ingeniería "en línea" se centra en el control y la corrección durante la producción.
             </p>
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="card p-6">
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">🚀 Ingeniería Fuera de Línea (Diseño)</h3>
-                    <p class="text-gray-600 mb-4"><strong>Enfoque:</strong> Proactivo. Se centra en optimizar el diseño del producto y del proceso ANTES de la producción en masa para construir la calidad desde el origen.</p>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">🚀 Ingeniería Fuera de Línea</h3>
+                    <p class="text-gray-600 mb-4">Se centra en la optimización del diseño de productos y procesos antes de que comience la producción en masa. Su objetivo es reducir la variabilidad y hacer que los productos y procesos sean robustos o insensibles a los factores de ruido.</p>
                     <div class="space-y-4">
                         <div class="p-4 bg-amber-50 rounded-lg">
-                            <h4 class="font-semibold">1. Diseño del Sistema</h4>
-                            <p class="text-sm text-gray-600">Fase conceptual donde se define la arquitectura básica, materiales y tecnología del producto.</p>
+                            <h4 class="font-semibold">1. Diseño del sistema</h4>
+                            <p class="text-sm text-gray-600">Selección y diseño de un producto que satisfaga los requerimientos del consumidor. Debe ser funcional, estable y ofrecer el mayor valor.</p>
                         </div>
                         <div class="p-4 bg-amber-50 rounded-lg">
-                            <h4 class="font-semibold">2. Diseño de Parámetros</h4>
-                            <p class="text-sm text-gray-600">La etapa clave. Se determinan los niveles óptimos de los factores controlables para hacer el producto robusto al "ruido".</p>
+                            <h4 class="font-semibold">2. Identificación de los parámetros</h4>
+                            <p class="text-sm text-gray-600">Identificar las variables clave que afectan la variación del producto y definir sus niveles para producir la menor cantidad de variación.</p>
                         </div>
                         <div class="p-4 bg-amber-50 rounded-lg">
-                            <h4 class="font-semibold">3. Diseño de Tolerancias</h4>
-                            <p class="text-sm text-gray-600">Se ajustan las tolerancias de los componentes críticos solo si es necesario, equilibrando costo y calidad.</p>
+                            <h4 class="font-semibold">3. Determinación de la tolerancia</h4>
+                            <p class="text-sm text-gray-600">Determinar los factores que más contribuyen a eliminar la variación y establecer los niveles de tolerancia apropiados.</p>
                         </div>
                     </div>
                 </div>
                 <div class="card p-6">
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">🏭 Ingeniería En Línea (Producción)</h3>
-                    <p class="text-gray-600 mb-4"><strong>Enfoque:</strong> Reactivo. Actividades de control durante la manufactura para mantener el proceso en el objetivo y corregir desviaciones.</p>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">🏭 Ingeniería En Línea</h3>
+                    <p class="text-gray-600 mb-4">Se refiere a las actividades de control de calidad que se realizan durante la fase de manufactura y operación del producto. Su propósito es controlar y corregir los procesos en tiempo real para mantener el producto dentro de los parámetros de calidad deseados.</p>
                      <ul class="space-y-3 list-disc list-inside text-gray-700">
-                        <li><strong>Control de Procesos:</strong> Monitoreo en tiempo real para detectar variaciones.</li>
-                        <li><strong>Diagnóstico y Ajuste:</strong> Identificar causas de variación y ajustar el proceso para volver al objetivo.</li>
-                        <li><strong>Inspección y Medición:</strong> Verificación de productos y mantenimiento de equipos.</li>
-                        <li><strong>Mantenimiento Preventivo:</strong> Acciones para asegurar la consistencia de la maquinaria y el proceso.</li>
+                        <li><strong>Enfoque:</strong> Reactivo, monitoreo y corrección.</li>
+                        <li><strong>Momento de aplicación:</strong> Manufactura y operación del producto.</li>
+                        <li><strong>Actividades clave:</strong> Control de procesos, ajuste de parámetros, mantenimiento preventivo.</li>
                     </ul>
-                    <p class="mt-6 p-4 bg-blue-50 text-blue-800 rounded-lg text-sm">Taguchi argumenta que invertir en un diseño robusto (Fuera de Línea) es mucho más rentable que depender de correcciones y control durante la producción (En Línea).</p>
+                    <p class="mt-6 p-4 bg-blue-50 text-blue-800 rounded-lg text-sm">La principal ventaja de estos métodos es la eficiencia, ya que permiten mantener el control durante la producción.</p>
                 </div>
             </div>
         </section>
@@ -149,7 +81,7 @@
         <section id="qlf" class="mb-16">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Explorador Interactivo de la Función de Pérdida (QLF)</h2>
             <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
-                La Función de Pérdida de Calidad (QLF) es la herramienta de Taguchi para traducir la desviación de la calidad en un costo monetario. Esta sección le permite interactuar con la fórmula para ver cómo pequeñas variaciones del valor objetivo ideal pueden generar pérdidas económicas significativas, incluso si el producto está "dentro de las especificaciones".
+                Esta sección le permite explorar la fórmula cuadrática de Taguchi: $L(x) = k(x - N)²$. Interactúe con los parámetros para visualizar cómo la pérdida económica aumenta con la desviación del valor nominal, incluso si el producto está dentro de las especificaciones.
             </p>
             <div class="card p-6 md:p-8">
                 <div class="grid lg:grid-cols-2 gap-8">
@@ -157,7 +89,7 @@
                         <h3 class="text-xl font-semibold mb-4">Parámetros de la Pérdida</h3>
                         <div class="space-y-4">
                             <div>
-                                <label for="targetValue" class="block text-sm font-medium text-gray-700">Valor Objetivo (N)</label>
+                                <label for="targetValue" class="block text-sm font-medium text-gray-700">Valor Nominal (N)</label>
                                 <input type="number" id="targetValue" value="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
                             </div>
                             <div>
@@ -183,7 +115,7 @@
                         <div class="chart-container">
                             <canvas id="qlfChart"></canvas>
                         </div>
-                        <p class="text-center text-sm text-gray-500 mt-2">L(x) = k * (x - N)²</p>
+                        <p class="text-center text-sm text-gray-500 mt-2">$L(x) = k(x-N)^2$</p>
                     </div>
                 </div>
             </div>
@@ -192,7 +124,7 @@
         <section id="caracteristicas">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Tipos de Características de Calidad</h2>
             <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
-                Taguchi clasifica las características de calidad en tres categorías, cada una con un objetivo de optimización diferente. Esta sección sirve como una guía de referencia rápida para entender qué tipo de función de pérdida y análisis se aplica a diferentes atributos de un producto o proceso.
+                Taguchi clasifica las características de calidad en tres categorías, cada una con un objetivo de optimización diferente. Aquí se detallan las fórmulas y objetivos según el tipo de característica.
             </p>
             <div>
                 <div class="mb-4 border-b border-gray-200">
@@ -204,30 +136,30 @@
                 </div>
                 <div class="card p-6 md:p-8">
                     <div id="ntb" class="tab-content">
-                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Nominal es Mejor (Nominal-is-Best)</h3>
-                        <p class="text-gray-600 mb-4">El objetivo es alcanzar un valor nominal o ideal específico. Cualquier desviación, por encima o por debajo, genera una pérdida.</p>
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Nominal es Mejor</h3>
+                        <p class="text-gray-600 mb-4">Para esta característica, el objetivo es que el valor de la característica de calidad alcance un valor nominal o ideal específico ($N$ o $m$) y que la variación alrededor de este valor sea mínima. Cualquier desviación por encima o por debajo, resulta en una pérdida.</p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Ejemplos:</strong> Diámetro de un pistón, voltaje de una fuente de poder, dosis de un medicamento.</li>
-                            <li><strong>Objetivo:</strong> Minimizar la variación alrededor del valor nominal (m).</li>
-                            <li><strong>Función de Pérdida:</strong> L(y) = k(y - m)²</li>
+                            <li><strong>Fórmula:</strong> $L(y) = k(y - m)^2$</li>
+                            <li><strong>$y$:</strong> Valor observado.</li>
+                            <li><strong>$m$:</strong> Valor nominal.</li>
                         </ul>
                     </div>
                     <div id="ltb" class="tab-content hidden">
-                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Mayor es Mejor (Larger-is-Better)</h3>
-                        <p class="text-gray-600 mb-4">El objetivo es maximizar el valor de la característica. Cuanto más alto, mejor.</p>
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Mayor es Mejor</h3>
+                        <p class="text-gray-600 mb-4">Minimizar el valor de la característica de calidad, idealmente hacía cero. Cuanto menor sea el valor, mejor es la calidad y menor la pérdida. Se aplica a atributos indeseables que se buscan eliminar o reducir al mínimo.</p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Ejemplos:</strong> Resistencia de un material, rendimiento de combustible, vida útil de una batería.</li>
-                            <li><strong>Objetivo:</strong> Maximizar la respuesta, idealmente hacia infinito.</li>
-                            <li><strong>Función de Pérdida:</strong> La pérdida disminuye a medida que el valor aumenta, L(y) = k(1/y²).</li>
+                            <li><strong>Fórmula:</strong> $S/N = -10 * log(\Sigma(1/Y^2)/n)$</li>
+                            <li><strong>$Y$:</strong> Respuestas para la combinación de nivel de factor dada.</li>
+                            <li><strong>$N$:</strong> Número de respuestas.</li>
                         </ul>
                     </div>
                     <div id="stb" class="tab-content hidden">
-                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Menor es Mejor (Smaller-is-Better)</h3>
-                        <p class="text-gray-600 mb-4">El objetivo es minimizar el valor de la característica. Cuanto más bajo, mejor, idealmente cero.</p>
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Menor es Mejor</h3>
+                        <p class="text-gray-600 mb-4">Minimizar el valor de la característica de calidad, idealmente hacía cero. Cuanto menor sea el valor, mejor es la calidad y menor la pérdida. Se aplica a atributos indeseables que se buscan eliminar o reducir al mínimo.</p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Ejemplos:</strong> Desgaste de un neumático, emisiones contaminantes, tiempo de respuesta de un servicio.</li>
-                            <li><strong>Objetivo:</strong> Minimizar la respuesta, idealmente hacia cero.</li>
-                            <li><strong>Función de Pérdida:</strong> La pérdida aumenta con el valor, L(y) = k(y²).</li>
+                            <li><strong>Fórmula:</strong> $S/N = -10 * log(\Sigma(Y^2)/n)$</li>
+                            <li><strong>$Y$:</strong> Respuestas para la combinación de nivel de factor dada.</li>
+                            <li><strong>$n$:</strong> Número de respuestas.</li>
                         </ul>
                     </div>
                 </div>
@@ -235,189 +167,7 @@
         </section>
 
     </main>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const qlfChartCtx = document.getElementById('qlfChart').getContext('2d');
-            let qlfChart;
-
-            const targetValueInput = document.getElementById('targetValue');
-            const specLimitInput = document.getElementById('specLimit');
-            const costAtLimitInput = document.getElementById('costAtLimit');
-            const observedValueSlider = document.getElementById('observedValueSlider');
-            const observedValueLabel = document.getElementById('observedValueLabel');
-            const lossValueDisplay = document.getElementById('lossValue');
-
-            function calculateLoss() {
-                const N = parseFloat(targetValueInput.value);
-                const LES = parseFloat(specLimitInput.value);
-                const C = parseFloat(costAtLimitInput.value);
-                const x = parseFloat(observedValueSlider.value);
-
-                if (isNaN(N) || isNaN(LES) || isNaN(C) || N === LES) {
-                    lossValueDisplay.textContent = 'Parámetros inválidos';
-                    return;
-                }
-
-                const delta = LES - N;
-                if (delta === 0) {
-                     lossValueDisplay.textContent = 'Parámetros inválidos';
-                    return;
-                }
-                const k = C / (delta * delta);
-                const loss = k * (x - N) * (x - N);
-
-                observedValueLabel.textContent = x.toFixed(1);
-                lossValueDisplay.textContent = `$${loss.toFixed(2)}`;
-                
-                updateChart(x, loss);
-            }
-
-            function initializeChart() {
-                const N = parseFloat(targetValueInput.value);
-                const LES = parseFloat(specLimitInput.value);
-                const C = parseFloat(costAtLimitInput.value);
-
-                if (isNaN(N) || isNaN(LES) || isNaN(C) || N === LES) return;
-                
-                const delta = LES - N;
-                const k = C / (delta * delta);
-                
-                const lowerBound = N - delta;
-                const upperBound = N + delta;
-                
-                observedValueSlider.min = lowerBound;
-                observedValueSlider.max = upperBound;
-
-                const labels = [];
-                const data = [];
-                for (let i = lowerBound; i <= upperBound; i += (upperBound - lowerBound) / 20) {
-                    labels.push(i.toFixed(1));
-                    data.push(k * (i - N) * (i - N));
-                }
-
-                if (qlfChart) {
-                    qlfChart.destroy();
-                }
-
-                qlfChart = new Chart(qlfChartCtx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Pérdida de Calidad ($)',
-                            data: data,
-                            borderColor: '#D97706',
-                            backgroundColor: 'rgba(217, 119, 6, 0.1)',
-                            tension: 0.4,
-                            fill: true,
-                        }, {
-                            label: 'Valor Observado',
-                            data: [],
-                            borderColor: '#1D4ED8',
-                            backgroundColor: '#1D4ED8',
-                            pointRadius: 8,
-                            pointHoverRadius: 10,
-                            type: 'scatter',
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.y !== null) {
-                                            label += new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(context.parsed.y);
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: { display: true, text: 'Pérdida ($)' }
-                            },
-                            x: {
-                                title: { display: true, text: 'Valor de Característica' }
-                            }
-                        }
-                    }
-                });
-                calculateLoss();
-            }
-
-            function updateChart(x, loss) {
-                if (qlfChart) {
-                    qlfChart.data.datasets[1].data = [{x: x.toFixed(1), y: loss}];
-                    qlfChart.update();
-                }
-            }
-            
-            [targetValueInput, specLimitInput, costAtLimitInput].forEach(input => {
-                input.addEventListener('input', initializeChart);
-            });
-            observedValueSlider.addEventListener('input', calculateLoss);
-
-            initializeChart();
-
-            const tabs = document.querySelectorAll('.tab-button');
-            const contents = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(item => item.classList.remove('active'));
-                    tab.classList.add('active');
-                    const target = tab.getAttribute('data-tab');
-                    contents.forEach(content => {
-                        if (content.id === target) {
-                            content.classList.remove('hidden');
-                        } else {
-                            content.classList.add('hidden');
-                        }
-                    });
-                });
-            });
-            
-            const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('main section');
-
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.4
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach(link => {
-                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
-                        });
-                    }
-                });
-            }, observerOptions);
-
-            sections.forEach(section => {
-                observer.observe(section);
-            });
-
-            navLinks.forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            });
-        });
-    </script>
+    <!-- El archivo JavaScript se importa al final del body -->
+    <script src="script.js"></script>
 </body>
 </html>
