@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorador Interactivo de Conceptos de Calidad de Taguchi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The application is structured into four thematic sections accessible via a top navigation bar: 1) An introduction to Taguchi's core philosophy. 2) An interactive comparison of Offline vs. Online engineering to clarify their roles. 3) A dynamic "Quality Loss Function (QLF) Explorer" which is the centerpiece, allowing users to manipulate variables and see the financial impact in real-time via a chart, making the abstract concept tangible. 4) A tabbed reference guide for the three types of quality characteristics. This structure was chosen to guide the user from foundational concepts to practical application and reference, facilitating a more intuitive learning journey than a linear report. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Offline vs. Online Engineering -> Goal: Compare -> Viz/Method: Interactive Tabs (HTML/JS) -> Interaction: Click to switch content -> Justification: Engages user and saves space.
+        - Report Info: QLF Formula -> Goal: Demonstrate financial impact of deviation -> Viz/Method: Interactive Line Chart (Chart.js/Canvas) with sliders/inputs -> Interaction: User adjusts values to see real-time chart and loss calculation -> Justification: Transforms a static formula into an exploratory tool, providing the "wow" factor and deep understanding.
+        - Report Info: Three Quality Characteristics -> Goal: Organize and differentiate -> Viz/Method: Tabbed Interface (HTML/JS) -> Interaction: Click to view details for each type -> Justification: Standard, clean UI for categorized information, preventing cognitive overload from a long list.
+        - Report Info: Offline Engineering Stages -> Goal: Show process -> Viz/Method: Styled Flexbox Diagram (HTML/Tailwind) -> Interaction: Static visual flow -> Justification: Clearly illustrates the sequence of design stages. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 40vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #D97706; /* amber-600 */
+            border-bottom-color: #D97706;
+        }
+        .tab-button {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .tab-button.active {
+            background-color: #D97706;
+            color: white;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #F3F4F6; /* gray-100 */
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-amber-700">Calidad Taguchi</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#filosofia" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Filosofía</a>
+                        <a href="#metodologias" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Metodologías</a>
+                        <a href="#qlf" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Explorador QLF</a>
+                        <a href="#caracteristicas" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Características</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="filosofia" class="mb-16 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">La Filosofía de Calidad de Genichi Taguchi</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8">
+                Esta sección introduce los pilares del pensamiento de Taguchi. Su enfoque revolucionó la gestión de la calidad al centrarse en el diseño robusto para minimizar la variabilidad y la "pérdida social" que genera un producto, en lugar de simplemente cumplir con las especificaciones.
+            </p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-amber-700 mb-2">Calidad Robusta</h3>
+                    <p class="text-gray-600">Diseñar productos y procesos insensibles a factores incontrolables ("ruido"), asegurando un rendimiento consistente en condiciones reales.</p>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-amber-700 mb-2">Función de Pérdida (QLF)</h3>
+                    <p class="text-gray-600">Cuantificar en términos monetarios la pérdida para la sociedad causada por cualquier desviación del valor objetivo ideal, incluso dentro de la tolerancia.</p>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-amber-700 mb-2">Calidad Orientada a Objetivos</h3>
+                    <p class="text-gray-600">El objetivo no es estar "dentro de los límites", sino acercarse lo más posible al valor nominal ideal para minimizar la pérdida y maximizar el valor.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="metodologias" class="mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Ingeniería de Calidad: En Línea vs. Fuera de Línea</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
+                Taguchi divide la ingeniería de calidad en dos fases complementarias. La fase "Fuera de Línea" es proactiva y se enfoca en el diseño, mientras que la "En Línea" es reactiva y se aplica durante la producción. Explore sus diferencias para entender por qué Taguchi prioriza el diseño robusto desde el inicio.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card p-6">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">🚀 Ingeniería Fuera de Línea (Diseño)</h3>
+                    <p class="text-gray-600 mb-4"><strong>Enfoque:</strong> Proactivo. Se centra en optimizar el diseño del producto y del proceso ANTES de la producción en masa para construir la calidad desde el origen.</p>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-amber-50 rounded-lg">
+                            <h4 class="font-semibold">1. Diseño del Sistema</h4>
+                            <p class="text-sm text-gray-600">Fase conceptual donde se define la arquitectura básica, materiales y tecnología del producto.</p>
+                        </div>
+                        <div class="p-4 bg-amber-50 rounded-lg">
+                            <h4 class="font-semibold">2. Diseño de Parámetros</h4>
+                            <p class="text-sm text-gray-600">La etapa clave. Se determinan los niveles óptimos de los factores controlables para hacer el producto robusto al "ruido".</p>
+                        </div>
+                        <div class="p-4 bg-amber-50 rounded-lg">
+                            <h4 class="font-semibold">3. Diseño de Tolerancias</h4>
+                            <p class="text-sm text-gray-600">Se ajustan las tolerancias de los componentes críticos solo si es necesario, equilibrando costo y calidad.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">🏭 Ingeniería En Línea (Producción)</h3>
+                    <p class="text-gray-600 mb-4"><strong>Enfoque:</strong> Reactivo. Actividades de control durante la manufactura para mantener el proceso en el objetivo y corregir desviaciones.</p>
+                     <ul class="space-y-3 list-disc list-inside text-gray-700">
+                        <li><strong>Control de Procesos:</strong> Monitoreo en tiempo real para detectar variaciones.</li>
+                        <li><strong>Diagnóstico y Ajuste:</strong> Identificar causas de variación y ajustar el proceso para volver al objetivo.</li>
+                        <li><strong>Inspección y Medición:</strong> Verificación de productos y mantenimiento de equipos.</li>
+                        <li><strong>Mantenimiento Preventivo:</strong> Acciones para asegurar la consistencia de la maquinaria y el proceso.</li>
+                    </ul>
+                    <p class="mt-6 p-4 bg-blue-50 text-blue-800 rounded-lg text-sm">Taguchi argumenta que invertir en un diseño robusto (Fuera de Línea) es mucho más rentable que depender de correcciones y control durante la producción (En Línea).</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="qlf" class="mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Explorador Interactivo de la Función de Pérdida (QLF)</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
+                La Función de Pérdida de Calidad (QLF) es la herramienta de Taguchi para traducir la desviación de la calidad en un costo monetario. Esta sección le permite interactuar con la fórmula para ver cómo pequeñas variaciones del valor objetivo ideal pueden generar pérdidas económicas significativas, incluso si el producto está "dentro de las especificaciones".
+            </p>
+            <div class="card p-6 md:p-8">
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Parámetros de la Pérdida</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="targetValue" class="block text-sm font-medium text-gray-700">Valor Objetivo (N)</label>
+                                <input type="number" id="targetValue" value="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="specLimit" class="block text-sm font-medium text-gray-700">Límite de Especificación (LES)</label>
+                                <input type="number" id="specLimit" value="105" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="costAtLimit" class="block text-sm font-medium text-gray-700">Costo en el Límite (C) en $</label>
+                                <input type="number" id="costAtLimit" value="50" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
+                            </div>
+                        </div>
+                         <h3 class="text-xl font-semibold mt-8 mb-4">Explore la Desviación</h3>
+                        <div>
+                            <label for="observedValueSlider" class="block text-sm font-medium text-gray-700">Valor Observado (x): <span id="observedValueLabel" class="font-bold">100</span></label>
+                            <input type="range" id="observedValueSlider" min="95" max="105" value="100" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-600">
+                        </div>
+                        <div class="mt-6 text-center bg-amber-100 p-4 rounded-lg">
+                            <p class="text-lg text-amber-800">Pérdida Calculada L(x):</p>
+                            <p id="lossValue" class="text-3xl font-bold text-amber-900">$0.00</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="chart-container">
+                            <canvas id="qlfChart"></canvas>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-2">L(x) = k * (x - N)²</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="caracteristicas">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Tipos de Características de Calidad</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
+                Taguchi clasifica las características de calidad en tres categorías, cada una con un objetivo de optimización diferente. Esta sección sirve como una guía de referencia rápida para entender qué tipo de función de pérdida y análisis se aplica a diferentes atributos de un producto o proceso.
+            </p>
+            <div>
+                <div class="mb-4 border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-4 justify-center" aria-label="Tabs">
+                        <button data-tab="ntb" class="tab-button active whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Nominal es Mejor</button>
+                        <button data-tab="ltb" class="tab-button whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Mayor es Mejor</button>
+                        <button data-tab="stb" class="tab-button whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Menor es Mejor</button>
+                    </nav>
+                </div>
+                <div class="card p-6 md:p-8">
+                    <div id="ntb" class="tab-content">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Nominal es Mejor (Nominal-is-Best)</h3>
+                        <p class="text-gray-600 mb-4">El objetivo es alcanzar un valor nominal o ideal específico. Cualquier desviación, por encima o por debajo, genera una pérdida.</p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Ejemplos:</strong> Diámetro de un pistón, voltaje de una fuente de poder, dosis de un medicamento.</li>
+                            <li><strong>Objetivo:</strong> Minimizar la variación alrededor del valor nominal (m).</li>
+                            <li><strong>Función de Pérdida:</strong> L(y) = k(y - m)²</li>
+                        </ul>
+                    </div>
+                    <div id="ltb" class="tab-content hidden">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Mayor es Mejor (Larger-is-Better)</h3>
+                        <p class="text-gray-600 mb-4">El objetivo es maximizar el valor de la característica. Cuanto más alto, mejor.</p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Ejemplos:</strong> Resistencia de un material, rendimiento de combustible, vida útil de una batería.</li>
+                            <li><strong>Objetivo:</strong> Maximizar la respuesta, idealmente hacia infinito.</li>
+                            <li><strong>Función de Pérdida:</strong> La pérdida disminuye a medida que el valor aumenta, L(y) = k(1/y²).</li>
+                        </ul>
+                    </div>
+                    <div id="stb" class="tab-content hidden">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Menor es Mejor (Smaller-is-Better)</h3>
+                        <p class="text-gray-600 mb-4">El objetivo es minimizar el valor de la característica. Cuanto más bajo, mejor, idealmente cero.</p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Ejemplos:</strong> Desgaste de un neumático, emisiones contaminantes, tiempo de respuesta de un servicio.</li>
+                            <li><strong>Objetivo:</strong> Minimizar la respuesta, idealmente hacia cero.</li>
+                            <li><strong>Función de Pérdida:</strong> La pérdida aumenta con el valor, L(y) = k(y²).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const qlfChartCtx = document.getElementById('qlfChart').getContext('2d');
+            let qlfChart;
+
+            const targetValueInput = document.getElementById('targetValue');
+            const specLimitInput = document.getElementById('specLimit');
+            const costAtLimitInput = document.getElementById('costAtLimit');
+            const observedValueSlider = document.getElementById('observedValueSlider');
+            const observedValueLabel = document.getElementById('observedValueLabel');
+            const lossValueDisplay = document.getElementById('lossValue');
+
+            function calculateLoss() {
+                const N = parseFloat(targetValueInput.value);
+                const LES = parseFloat(specLimitInput.value);
+                const C = parseFloat(costAtLimitInput.value);
+                const x = parseFloat(observedValueSlider.value);
+
+                if (isNaN(N) || isNaN(LES) || isNaN(C) || N === LES) {
+                    lossValueDisplay.textContent = 'Parámetros inválidos';
+                    return;
+                }
+
+                const delta = LES - N;
+                if (delta === 0) {
+                     lossValueDisplay.textContent = 'Parámetros inválidos';
+                    return;
+                }
+                const k = C / (delta * delta);
+                const loss = k * (x - N) * (x - N);
+
+                observedValueLabel.textContent = x.toFixed(1);
+                lossValueDisplay.textContent = `$${loss.toFixed(2)}`;
+                
+                updateChart(x, loss);
+            }
+
+            function initializeChart() {
+                const N = parseFloat(targetValueInput.value);
+                const LES = parseFloat(specLimitInput.value);
+                const C = parseFloat(costAtLimitInput.value);
+
+                if (isNaN(N) || isNaN(LES) || isNaN(C) || N === LES) return;
+                
+                const delta = LES - N;
+                const k = C / (delta * delta);
+                
+                const lowerBound = N - delta;
+                const upperBound = N + delta;
+                
+                observedValueSlider.min = lowerBound;
+                observedValueSlider.max = upperBound;
+
+                const labels = [];
+                const data = [];
+                for (let i = lowerBound; i <= upperBound; i += (upperBound - lowerBound) / 20) {
+                    labels.push(i.toFixed(1));
+                    data.push(k * (i - N) * (i - N));
+                }
+
+                if (qlfChart) {
+                    qlfChart.destroy();
+                }
+
+                qlfChart = new Chart(qlfChartCtx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Pérdida de Calidad ($)',
+                            data: data,
+                            borderColor: '#D97706',
+                            backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                        }, {
+                            label: 'Valor Observado',
+                            data: [],
+                            borderColor: '#1D4ED8',
+                            backgroundColor: '#1D4ED8',
+                            pointRadius: 8,
+                            pointHoverRadius: 10,
+                            type: 'scatter',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Pérdida ($)' }
+                            },
+                            x: {
+                                title: { display: true, text: 'Valor de Característica' }
+                            }
+                        }
+                    }
+                });
+                calculateLoss();
+            }
+
+            function updateChart(x, loss) {
+                if (qlfChart) {
+                    qlfChart.data.datasets[1].data = [{x: x.toFixed(1), y: loss}];
+                    qlfChart.update();
+                }
+            }
+            
+            [targetValueInput, specLimitInput, costAtLimitInput].forEach(input => {
+                input.addEventListener('input', initializeChart);
+            });
+            observedValueSlider.addEventListener('input', calculateLoss);
+
+            initializeChart();
+
+            const tabs = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(item => item.classList.remove('active'));
+                    tab.classList.add('active');
+                    const target = tab.getAttribute('data-tab');
+                    contents.forEach(content => {
+                        if (content.id === target) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.4
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            navLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
