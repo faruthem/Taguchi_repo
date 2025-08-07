@@ -38,19 +38,27 @@
         <section id="filosofia" class="mb-16 text-center">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">La Filosofía de calidad de Genichi Taguchi</h2>
             <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8">
-                Taguchi define la calidad en términos de la pérdida generada por el producto a la sociedad. Dicha pérdida puede ser estimada desde el momento en que un producto es despachado hasta el final de su vida útil. El objetivo es construir la calidad intrínsecamente en el producto.
+                Taguchi define la calidad en términos de la pérdida generada por el producto a la sociedad.
+                <ol>
+                    <li>
+                        Dicha pérdida puede ser estimada desde el momento en que un producto es despachado hasta el final de su vida útil.
+                    </li>
+                    <li>
+                        El objetivo es construir la calidad intrínsecamente en el producto.
+                    </li>
+                </ol>
             </p>
         </section>
 
         <section id="metodologias" class="mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Ingeniería de calidad: En Línea vs. Fuera de Línea</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Ingeniería de calidad: En línea vs. Fuera de línea</h2>
             <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
-                El control de calidad se divide en dos enfoques principales. Explore las diferencias para entender cómo la ingeniería "fuera de la línea" busca la prevención, mientras que la ingeniería "en línea" se centra en el control y la corrección durante la producción.
+                El control de calidad se divide en dos enfoques principales. La ingeniería "fuera de la línea" busca la <b>prevención</b>, mientras que la ingeniería "en línea" se centra en el <b>control</b> y la <b>corrección</b> durante la producción.
             </p>
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="card p-6">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3">🚀 Ingeniería fuera de línea</h3>
-                    <p class="text-gray-600 mb-4">Se centra en la optimización del diseño de productos y procesos antes de que comience la producción en masa. Su objetivo es reducir la variabilidad y hacer que los productos y procesos sean robustos o insensibles a los factores de ruido.</p>
+                    <p class="text-gray-600 mb-4">Se centra en la optimización del diseño de productos y procesos antes de que comience la producción en masa. Su <b>objetivo</b> es reducir la variabilidad y hacer que los productos y procesos sean robustos o insensibles a los factores de ruido.</p>
                     <div class="space-y-4">
                         <div class="p-4 bg-amber-50 rounded-lg">
                             <h4 class="font-semibold">1. Diseño del sistema</h4>
@@ -82,7 +90,7 @@
         <section id="qlf" class="mb-16">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Explorador de la Función de Pérdida (QLF)</h2>
             <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
-                Fórmula cuadrática de Taguchi: $L(x) = k(x - N)²$. La pérdida económica aumenta con la desviación del valor nominal, incluso si el producto está dentro de las especificaciones.
+                Fórmula cuadrática de Taguchi: L(x) = k(x - N)². La pérdida económica aumenta con la desviación del valor nominal, incluso si el producto está dentro de las especificaciones.
             </p>
             <div class="card p-6 md:p-8">
                 <div class="grid lg:grid-cols-2 gap-8">
@@ -116,7 +124,7 @@
                         <div class="chart-container">
                             <canvas id="qlfChart"></canvas>
                         </div>
-                        <p class="text-center text-sm text-gray-500 mt-2">$L(x) = k(x-N)^2$</p>
+                        <p class="text-center text-sm text-gray-500 mt-2">L(x) = k(x-N)^2</p>
                     </div>
                 </div>
             </div>
@@ -130,37 +138,37 @@
             <div>
                 <div class="mb-4 border-b border-gray-200">
                     <nav class="-mb-px flex space-x-4 justify-center" aria-label="Tabs">
-                        <button data-tab="ntb" class="tab-button active whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Nominal es Mejor</button>
-                        <button data-tab="ltb" class="tab-button whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Mayor es Mejor</button>
-                        <button data-tab="stb" class="tab-button whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Menor es Mejor</button>
+                        <button data-tab="ntb" class="tab-button active whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Nominal es mejor</button>
+                        <button data-tab="ltb" class="tab-button whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Mayor es mejor</button>
+                        <button data-tab="stb" class="tab-button whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Menor es mejor</button>
                     </nav>
                 </div>
                 <div class="card p-6 md:p-8">
                     <div id="ntb" class="tab-content">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-3">Nominal es mejor</h3>
-                        <p class="text-gray-600 mb-4">Para esta característica, el objetivo es que el valor de la característica de calidad alcance un valor nominal o ideal específico ($N$ o $m$) y que la variación alrededor de este valor sea mínima. Cualquier desviación por encima o por debajo, resulta en una pérdida.</p>
+                        <p class="text-gray-600 mb-4">Para esta característica, el objetivo es que el valor de la característica de calidad alcance un valor nominal o ideal específico (N o m) y que la variación alrededor de este valor sea mínima. Cualquier desviación por encima o por debajo, resulta en una pérdida.</p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Fórmula:</strong> $L(y) = k(y - m)^2$</li>
-                            <li><strong>$y$:</strong> Valor observado.</li>
-                            <li><strong>$m$:</strong> Valor nominal.</li>
+                            <li><strong>Fórmula:</strong> L(y) = k(y - m)^2</li>
+                            <li><strong>y:</strong> Valor observado.</li>
+                            <li><strong>m:</strong> Valor nominal.</li>
                         </ul>
                     </div>
                     <div id="ltb" class="tab-content hidden">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-3">Mayor es mejor</h3>
                         <p class="text-gray-600 mb-4">Minimizar el valor de la característica de calidad, idealmente hacía cero. Cuanto menor sea el valor, mejor es la calidad y menor la pérdida. Se aplica a atributos indeseables que se buscan eliminar o reducir al mínimo.</p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Fórmula:</strong> $S/N = -10 * log(\Sigma(1/Y^2)/n)$</li>
-                            <li><strong>$Y$:</strong> Respuestas para la combinación de nivel de factor dada.</li>
-                            <li><strong>$N$:</strong> Número de respuestas.</li>
+                            <li><strong>Fórmula:</strong> S/N = -10 * log(\Sigma(1/Y^2)/n)</li>
+                            <li><strong>Y:</strong> Respuestas para la combinación de nivel de factor dada.</li>
+                            <li><strong>N:</strong> Número de respuestas.</li>
                         </ul>
                     </div>
                     <div id="stb" class="tab-content hidden">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-3">Menor es mejor</h3>
                         <p class="text-gray-600 mb-4">Minimizar el valor de la característica de calidad, idealmente hacía cero. Cuanto menor sea el valor, mejor es la calidad y menor la pérdida. Se aplica a atributos indeseables que se buscan eliminar o reducir al mínimo.</p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Fórmula:</strong> $S/N = -10 * log(\Sigma(Y^2)/n)$</li>
-                            <li><strong>$Y$:</strong> Respuestas para la combinación de nivel de factor dada.</li>
-                            <li><strong>$n$:</strong> Número de respuestas.</li>
+                            <li><strong>Fórmula:</strong> S/N = -10 * log(\Sigma(Y^2)/n)</li>
+                            <li><strong>Y:</strong> Respuestas para la combinación de nivel de factor dada.</li>
+                            <li><strong>n:</strong> Número de respuestas.</li>
                         </ul>
                     </div>
                 </div>
