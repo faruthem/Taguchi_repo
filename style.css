@@ -1,54 +1,53 @@
-/* Estilos generales del cuerpo y tipografía */
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #FDFBF8; /* Un color crema claro */
-    color: #4A4A4A; /* Un gris oscuro */
+    background-color: #f3f4f6;
+    color: #1f2937;
 }
 
-/* Estilos para el contenedor de la gráfica */
-.chart-container {
-    position: relative;
-    width: 100%;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    height: 300px;
-    max-height: 40vh;
-}
-@media (min-width: 768px) {
-    .chart-container {
-        height: 400px;
-    }
+.container {
+    max-width: 1280px;
+    margin: auto;
+    padding: 2rem;
 }
 
-/* Estilos para los enlaces de la barra de navegación */
-.nav-link {
-    transition: color 0.3s, border-color 0.3s;
-    border-bottom: 2px solid transparent;
-}
-.nav-link:hover, .nav-link.active {
-    color: #D97706; /* Un color ámbar */
-    border-bottom-color: #D97706;
+.section-title {
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
-/* Estilos para los botones de las pestañas */
-.tab-button {
-    transition: background-color 0.3s, color 0.3s;
-}
 .tab-button.active {
-    background-color: #D97706;
-    color: white;
+    background-color: #fff;
+    border-bottom-color: #1f2937;
+    color: #1f2937;
+    font-weight: 600;
 }
 
-/* Estilos para las tarjetas de contenido */
-.card {
-    background-color: #FFFFFF;
-    border: 1px solid #F3F4F6; /* Un gris muy claro */
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-    transition: transform 0.3s, box-shadow 0.3s;
+.tab-content.hidden {
+    display: none;
 }
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
+
+.qlf-chart-container {
+    height: 400px;
+    width: 100%;
 }
+
+.result-box {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+}
+
+.code-block {
+    background-color: #1f2937;
+    color: #e5e7eb;
+    font-family: monospace;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+}
+
+.formula {
+    font-size: 1.25rem;
+    font-family: 'serif';
+}
+
