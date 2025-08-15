@@ -3,192 +3,506 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conceptos de calidad de Taguchi</title>
+    <title>Análisis de Calidad Taguchi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- El archivo de estilo se importa aquí -->
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .container {
+            max-width: 1280px;
+            margin: auto;
+            padding: 2rem;
+        }
+        .section-title {
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .tab-button.active {
+            background-color: #fff;
+            border-bottom-color: #1f2937;
+            color: #1f2937;
+            font-weight: 600;
+        }
+        .tab-content.hidden {
+            display: none;
+        }
+        .qlf-chart-container {
+            height: 400px;
+            width: 100%;
+        }
+        .result-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #e5e7eb;
+            font-family: monospace;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        .formula {
+            font-size: 1.25rem;
+            font-family: 'serif';
+        }
+        
+    </style>
 </head>
-<body class="antialiased">
+<body class="bg-gray-100">
 
-    <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold text-amber-700">Calidad Taguchi</h1>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#filosofia" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Filosofía</a>
-                        <a href="#metodologias" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Metodologías</a>
-                        <a href="#qlf" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Explorador QLF</a>
-                        <a href="#caracteristicas" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Características</a>
-                        <a href="#bibliografia" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Bibliografía</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <!-- Main Container -->
+    <div class="container bg-white rounded-xl shadow-lg mt-8 mb-8">
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <!-- Header -->
+        <header class="text-center py-6 border-b border-gray-200">
+            <h1 class="text-4xl font-extrabold text-gray-900">Análisis de Calidad según Taguchi</h1>
+            <p class="mt-2 text-lg text-gray-600">Explorador Interactivo de la Función de Pérdida y Sumas de Cuadrados</p>
+        </header>
 
-        <section id="filosofia" class="mb-16 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">La Filosofía de calidad de Genichi Taguchi</h2>
-            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8">
-                Taguchi define la calidad en términos de la pérdida generada por el producto a la sociedad.
-                <ol>
-                    <li>
-                        Dicha pérdida puede ser estimada desde el momento en que un producto es despachado hasta el final de su vida útil.
-                    </li>
-                    <li>
-                        El objetivo es construir la calidad intrínsecamente en el producto.
-                    </li>
-                </ol>
-            </p>
-        </section>
-
-        <section id="metodologias" class="mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Ingeniería de calidad: En línea vs. Fuera de línea</h2>
-            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
-                El control de calidad se divide en dos enfoques principales. Explore las diferencias para entender cómo la ingeniería "fuera de la línea" busca la prevención, mientras que la ingeniería "en línea" se centra en el control y la corrección durante la producción.
-            </p>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="card p-6">
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">🚀 Ingeniería fuera de línea</h3>
-                    <p class="text-gray-600 mb-4">Se centra en la optimización del diseño de productos y procesos antes de que comience la producción en masa. Su <b>objetivo</b> es reducir la variabilidad y hacer que los productos y procesos sean robustos o insensibles a los factores de ruido.</p>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-amber-50 rounded-lg">
-                            <h4 class="font-semibold">1. Diseño del sistema</h4>
-                            <p class="text-sm text-gray-600">Selección y diseño de un producto que satisfaga los requerimientos del consumidor. Debe ser funcional, estable y ofrecer el mayor valor.</p>
-                        </div>
-                        <div class="p-4 bg-amber-50 rounded-lg">
-                            <h4 class="font-semibold">2. Identificación de los parámetros</h4>
-                            <p class="text-sm text-gray-600">Identificar las variables clave que afectan la variación del producto y definir sus niveles para producir la menor cantidad de variación.</p>
-                        </div>
-                        <div class="p-4 bg-amber-50 rounded-lg">
-                            <h4 class="font-semibold">3. Determinación de la tolerancia</h4>
-                            <p class="text-sm text-gray-600">Determinar los factores que más contribuyen a eliminar la variación y establecer los niveles de tolerancia apropiados.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card p-6">
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-3">🏭 Ingeniería en línea</h3>
-                    <p class="text-gray-600 mb-4">Se refiere a las actividades de control de calidad que se realizan durante la fase de manufactura y operación del producto. Su propósito es controlar y corregir los procesos en tiempo real para mantener el producto dentro de los parámetros de calidad deseados.</p>
-                     <ul class="space-y-3 list-disc list-inside text-gray-700">
-                        <li><strong>Enfoque:</strong> Reactivo, monitoreo y corrección.</li>
-                        <li><strong>Momento de aplicación:</strong> Manufactura y operación del producto.</li>
-                        <li><strong>Actividades clave:</strong> Control de procesos, ajuste de parámetros, mantenimiento preventivo.</li>
-                    </ul>
-                    <p class="mt-6 p-4 bg-blue-50 text-blue-800 rounded-lg text-sm">La principal ventaja de estos métodos es la eficiencia, ya que permiten mantener el control durante la producción.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="qlf" class="mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Explorador de la Función de Pérdida (QLF)</h2>
-            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
-                Fórmula cuadrática de Taguchi: L(x) = k(x - N)². La pérdida económica aumenta con la desviación del valor nominal, incluso si el producto está dentro de las especificaciones.
-            </p>
-            <div class="card p-6 md:p-8">
-                <div class="grid lg:grid-cols-2 gap-8">
+        <!-- QLF Section -->
+        <section class="py-8 border-b border-gray-200">
+            <h2 class="text-2xl font-bold section-title text-gray-800">1. Explorador de la Función de Pérdida de Calidad (QLF)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <!-- QLF Controls -->
+                <div class="space-y-4 p-4 rounded-lg bg-gray-50 border border-gray-200">
                     <div>
-                        <h3 class="text-xl font-semibold mb-4">Parámetros de la pérdida</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label for="targetValue" class="block text-sm font-medium text-gray-700">Valor nominal (N)</label>
-                                <input type="number" id="targetValue" value="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
-                            </div>
-                            <div>
-                                <label for="specLimit" class="block text-sm font-medium text-gray-700">Límite de Especificación (LES)</label>
-                                <input type="number" id="specLimit" value="105" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
-                            </div>
-                            <div>
-                                <label for="costAtLimit" class="block text-sm font-medium text-gray-700">Costo en el Límite (C) en $</label>
-                                <input type="number" id="costAtLimit" value="50" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm">
-                            </div>
-                        </div>
-                         <h3 class="text-xl font-semibold mt-8 mb-4">Explore la desviación</h3>
-                        <div>
-                            <label for="observedValueSlider" class="block text-sm font-medium text-gray-700">Valor Observado (x): <span id="observedValueLabel" class="font-bold">100</span></label>
-                            <input type="range" id="observedValueSlider" min="95" max="105" value="100" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-600">
-                        </div>
-                        <div class="mt-6 text-center bg-amber-100 p-4 rounded-lg">
-                            <p class="text-lg text-amber-800">Pérdida Calculada L(x):</p>
-                            <p id="lossValue" class="text-3xl font-bold text-amber-900">$0.00</p>
-                        </div>
+                        <label for="targetValue" class="block text-sm font-medium text-gray-700">Valor Nominal (N)</label>
+                        <input type="number" id="targetValue" value="10" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     </div>
                     <div>
-                        <div class="chart-container">
-                            <canvas id="qlfChart"></canvas>
-                        </div>
-                        <p class="text-center text-sm text-gray-500 mt-2">L(x) = k(x-N)^2</p>
+                        <label for="specLimit" class="block text-sm font-medium text-gray-700">Límite de Especificación (LES)</label>
+                        <input type="number" id="specLimit" value="12" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="costAtLimit" class="block text-sm font-medium text-gray-700">Costo en el Límite de Especificación (C)</label>
+                        <input type="number" id="costAtLimit" value="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="pt-4">
+                        <label for="observedValueSlider" class="block text-sm font-medium text-gray-700">Valor Observado (<span id="observedValueLabel">10</span>)</label>
+                        <input type="range" id="observedValueSlider" min="8" max="12" step="0.1" value="10" class="mt-1 w-full">
+                    </div>
+                    <div class="text-center mt-4 p-4 bg-yellow-100 rounded-lg border border-yellow-200">
+                        <p class="text-sm font-medium text-yellow-800">Pérdida de Calidad (L):</p>
+                        <p id="lossValue" class="text-2xl font-bold text-yellow-900 mt-1">$0.00</p>
+                    </div>
+                </div>
+
+                <!-- QLF Chart -->
+                <div class="qlf-chart-container">
+                    <canvas id="qlfChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabbed Interface for Sums of Squares -->
+        <section class="py-8">
+            <h2 class="text-2xl font-bold section-title text-gray-800">2. Descomposición de la Sumatoria de Cuadrados</h2>
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                    <button data-tab="nominal-tab" class="tab-button active inline-flex items-center py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">
+                        Nominal es Mejor
+                    </button>
+                    <button data-tab="smaller-tab" class="tab-button inline-flex items-center py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">
+                        Menor es Mejor
+                    </button>
+                    <button data-tab="larger-tab" class="tab-button inline-flex items-center py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">
+                        Mayor es Mejor
+                    </button>
+                </nav>
+            </div>
+            
+            <!-- Tab Contents -->
+            <div id="nominal-tab" class="tab-content mt-4">
+                <h3 class="text-xl font-semibold mb-4">Nominal es Mejor (NTB)</h3>
+                <p class="text-gray-600 mb-4">El objetivo es que el valor de la característica de calidad alcance un valor nominal o ideal específico ($\text{N}$).</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- SST Formula and input -->
+                    <div class="bg-blue-50 rounded-lg p-4 shadow-sm border border-blue-200">
+                        <h4 class="text-lg font-medium text-blue-800">SST</h4>
+                        <p class="text-gray-700 my-2 formula">$$\sum_{i=1}^{n} (y_i - N)^2$$</p>
+                        <p class="text-sm text-gray-500">Suma total de cuadrados desde el valor nominal.</p>
+                    </div>
+                    <!-- SSe Formula and input -->
+                    <div class="bg-red-50 rounded-lg p-4 shadow-sm border border-red-200">
+                        <h4 class="text-lg font-medium text-red-800">SSe</h4>
+                        <p class="text-gray-700 my-2 formula">$$\sum_{i=1}^{n} (y_i - \bar{y})^2$$</p>
+                        <p class="text-sm text-gray-500">Suma de cuadrados del error, variación de las diferencias individuales.</p>
+                    </div>
+                    <!-- SSm Formula and input -->
+                    <div class="bg-green-50 rounded-lg p-4 shadow-sm border border-green-200">
+                        <h4 class="text-lg font-medium text-green-800">SSm</h4>
+                        <p class="text-gray-700 my-2 formula">$$\frac{(\sum_{i=1}^{n} (y_i - N))^2}{n}$$</p>
+                        <p class="text-sm text-gray-500">Suma de cuadrados de la media, variación de la media general.</p>
+                    </div>
+                </div>
+                <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h4 class="font-bold mb-2">Calculadora de "Nominal es Mejor"</h4>
+                    <label for="nominalData" class="block text-sm font-medium text-gray-700">Valores observados (y_i, separados por comas):</label>
+                    <input type="text" id="nominalData" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" value="10.2, 9.8, 10.1, 9.9">
+                    <label for="nominalTarget" class="block text-sm font-medium text-gray-700 mt-2">Valor Nominal (N):</label>
+                    <input type="number" id="nominalTarget" value="10" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <button onclick="calculateNominal()" class="mt-4 w-full px-4 py-2 bg-gray-800 text-white font-bold rounded-md hover:bg-gray-700">Calcular</button>
+                    <div class="mt-4 space-y-2 text-sm">
+                        <p><span class="font-bold">SST:</span> <span id="nominal-SST">-</span></p>
+                        <p><span class="font-bold">SSe:</span> <span id="nominal-SSe">-</span></p>
+                        <p><span class="font-bold">SSm:</span> <span id="nominal-SSm">-</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="smaller-tab" class="tab-content hidden mt-4">
+                <h3 class="text-xl font-semibold mb-4">Menor es Mejor (STB)</h3>
+                <p class="text-gray-600 mb-4">El objetivo es minimizar el valor de la característica de calidad, idealmente hacia cero.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- SST Formula and input -->
+                    <div class="bg-blue-50 rounded-lg p-4 shadow-sm border border-blue-200">
+                        <h4 class="text-lg font-medium text-blue-800">SST</h4>
+                        <p class="text-gray-700 my-2 formula">$$\sum_{i=1}^{n} (y_i)^2$$</p>
+                        <p class="text-sm text-gray-500">Suma total de cuadrados desde cero.</p>
+                    </div>
+                    <!-- SSe Formula and input -->
+                    <div class="bg-red-50 rounded-lg p-4 shadow-sm border border-red-200">
+                        <h4 class="text-lg font-medium text-red-800">SSe</h4>
+                        <p class="text-gray-700 my-2 formula">$$\sum_{i=1}^{n} (y_i - \bar{y})^2$$</p>
+                        <p class="text-sm text-gray-500">Suma de cuadrados del error, variación de las diferencias individuales.</p>
+                    </div>
+                    <!-- SSm Formula and input -->
+                    <div class="bg-green-50 rounded-lg p-4 shadow-sm border border-green-200">
+                        <h4 class="text-lg font-medium text-green-800">SSm</h4>
+                        <p class="text-gray-700 my-2 formula">$$\frac{(\sum_{i=1}^{n} y_i)^2}{n}$$</p>
+                        <p class="text-sm text-gray-500">Suma de cuadrados de la media, variación de la media general.</p>
+                    </div>
+                </div>
+                <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h4 class="font-bold mb-2">Calculadora de "Menor es Mejor"</h4>
+                    <label for="smallerData" class="block text-sm font-medium text-gray-700">Valores observados (y_i, separados por comas):</label>
+                    <input type="text" id="smallerData" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" value="0.1, 0.05, 0.15, 0.08">
+                    <button onclick="calculateSmaller()" class="mt-4 w-full px-4 py-2 bg-gray-800 text-white font-bold rounded-md hover:bg-gray-700">Calcular</button>
+                    <div class="mt-4 space-y-2 text-sm">
+                        <p><span class="font-bold">SST:</span> <span id="smaller-SST">-</span></p>
+                        <p><span class="font-bold">SSe:</span> <span id="smaller-SSe">-</span></p>
+                        <p><span class="font-bold">SSm:</span> <span id="smaller-SSm">-</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="larger-tab" class="tab-content hidden mt-4">
+                <h3 class="text-xl font-semibold mb-4">Mayor es Mejor (LTB)</h3>
+                <p class="text-gray-600 mb-4">El objetivo es maximizar el valor de la característica de calidad, idealmente hacia el infinito.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- SST Formula and input -->
+                    <div class="bg-blue-50 rounded-lg p-4 shadow-sm border border-blue-200">
+                        <h4 class="text-lg font-medium text-blue-800">SST</h4>
+                        <p class="text-gray-700 my-2 formula">$$\sum_{i=1}^{n} (\frac{1}{y_i})^2$$</p>
+                        <p class="text-sm text-gray-500">Suma total de cuadrados desde cero, utilizando los recíprocos.</p>
+                    </div>
+                    <!-- SSe Formula and input -->
+                    <div class="bg-red-50 rounded-lg p-4 shadow-sm border border-red-200">
+                        <h4 class="text-lg font-medium text-red-800">SSe</h4>
+                        <p class="text-gray-700 my-2 formula">$$\sum_{i=1}^{n} (\frac{1}{y_i} - \frac{\sum \frac{1}{y_i}}{n})^2$$</p>
+                        <p class="text-sm text-gray-500">Suma de cuadrados del error, variación de las diferencias individuales.</p>
+                    </div>
+                    <!-- SSm Formula and input -->
+                    <div class="bg-green-50 rounded-lg p-4 shadow-sm border border-green-200">
+                        <h4 class="text-lg font-medium text-green-800">SSm</h4>
+                        <p class="text-gray-700 my-2 formula">$$\frac{(\sum_{i=1}^{n} \frac{1}{y_i})^2}{n}$$</p>
+                        <p class="text-sm text-gray-500">Suma de cuadrados de la media, variación de la media general.</p>
+                    </div>
+                </div>
+                <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h4 class="font-bold mb-2">Calculadora de "Mayor es Mejor"</h4>
+                    <label for="largerData" class="block text-sm font-medium text-gray-700">Valores observados (y_i, separados por comas):</label>
+                    <input type="text" id="largerData" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" value="50, 55, 48, 52">
+                    <button onclick="calculateLarger()" class="mt-4 w-full px-4 py-2 bg-gray-800 text-white font-bold rounded-md hover:bg-gray-700">Calcular</button>
+                    <div class="mt-4 space-y-2 text-sm">
+                        <p><span class="font-bold">SST:</span> <span id="larger-SST">-</span></p>
+                        <p><span class="font-bold">SSe:</span> <span id="larger-SSe">-</span></p>
+                        <p><span class="font-bold">SSm:</span> <span id="larger-SSm">-</span></p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="caracteristicas">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Tipos de características de calidad</h2>
-            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">
-                Taguchi clasifica las características de calidad en tres categorías, cada una con un objetivo de optimización diferente. Aquí se detallan las fórmulas y objetivos según el tipo de característica.
-            </p>
-            <div>
-                <div class="mb-4 border-b border-gray-200">
-                    <nav class="-mb-px flex space-x-4 justify-center" aria-label="Tabs">
-                        <button data-tab="ntb" class="tab-button active whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Nominal es mejor</button>
-                        <button data-tab="ltb" class="tab-button whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Mayor es mejor</button>
-                        <button data-tab="stb" class="tab-button whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm rounded-t-lg">Menor es mejor</button>
-                    </nav>
-                </div>
-                <div class="card p-6 md:p-8">
-                    <div id="ntb" class="tab-content">
-                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Nominal es mejor</h3>
-                        <p class="text-gray-600 mb-4">El objetivo es que el valor de la característica de calidad alcance un valor nominal o ideal específico (N o m) y que la variación alrededor de este valor sea mínima. Cualquier desviación por encima o por debajo, resulta en una pérdida.</p>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Fórmula:</strong> L(y) = k(y - m)^2</li>
-                            <li><strong>y:</strong> Valor observado.</li>
-                            <li><strong>m:</strong> Valor nominal.</li>
-                        </ul>
-                    </div>
-                    <div id="ltb" class="tab-content hidden">
-                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Mayor es mejor</h3>
-                        <p class="text-gray-600 mb-4">Maximizar el valor de la característica de calidad, idealmente hasta el infinito. Cuanto mayor sea el valor, mejor es la calidad y menor la pérdida. </p>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Fórmula:</strong> S/N = -10 * log(\Sigma(1/Y^2)/n)</li>
-                            <li><strong>Y:</strong> Respuestas para la combinación de nivel de factor dada.</li>
-                            <li><strong>N:</strong> Número de respuestas.</li>
-                        </ul>
-                    </div>
-                    <div id="stb" class="tab-content hidden">
-                        <h3 class="text-2xl font-semibold text-gray-800 mb-3">Menor es mejor</h3>
-                        <p class="text-gray-600 mb-4">Minimizar el valor de la característica de calidad, idealmente hacía cero. Cuanto menor sea el valor, mejor es la calidad y menor la pérdida. Se aplica a atributos indeseables que se buscan eliminar o reducir al mínimo.</p>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700">
-                            <li><strong>Fórmula:</strong> S/N = -10 * log(\Sigma(Y^2)/n)</li>
-                            <li><strong>Y:</strong> Respuestas para la combinación de nivel de factor dada.</li>
-                            <li><strong>n:</strong> Número de respuestas.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+    </div>
+    
+    <!-- Script for interactivity and calculations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        // Este código controla la interactividad de la página web.
 
-        <section id="bibliografia" class="mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center">Bibliografía</h2>
-            <div class="card p-6 md:p-8">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-3">Referencias</h3>
-                <ul class="list-disc list-inside space-y-2 text-gray-700 pl-4">
-                    <li>Cevallos Ampuero, J. M. (2000). <i>Aplicación de los Métodos Taguchi a la mejora de la calidad en la pequeña y microempresa</i>. [Tesis de maestría, Universidad Nacional Mayor de San Marcos]. ResearchGate.</li>
-                    <li>Sharma, N. K., Cudney, E. A., Ragsdell, K. M. & Paryani, K. (2007). Quality Loss Function - A Common Methodology for Three Cases. <i>Journal of Industrial and Systems Engineering, 1</i>(3), 218-234.</li>
-                    <li>Unal, R. & Dean, E. B. (1991). <i>Taguchi Approach to Design Optimization for Quality and Cost: An Overview</i>. Presentado en la 1991 Annual Conference of the International Society of Parametric Analysts.</li>
-                </ul>
-            </div>
-        </section>
+        // ----------------------------------------------------
+        // Lógica para el Explorador Interactivo de la QLF
+        // ----------------------------------------------------
+        
+        // Obtener elementos del DOM para el QLF
+        const targetValueInput = document.getElementById('targetValue');
+        const specLimitInput = document.getElementById('specLimit');
+        const costAtLimitInput = document.getElementById('costAtLimit');
+        const observedValueSlider = document.getElementById('observedValueSlider');
+        const observedValueLabel = document.getElementById('observedValueLabel');
+        const lossValueDisplay = document.getElementById('lossValue');
+        const qlfCanvas = document.getElementById('qlfChart');
 
-    </main>
-    <!-- El archivo JavaScript se importa al final del body -->
-    <script src="script.js"></script>
+        // Inicializar la gráfica de QLF
+        const qlfChart = new Chart(qlfCanvas, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Función de Pérdida',
+                    data: [],
+                    borderColor: 'rgb(217, 119, 6)',
+                    backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Valor Observado (x)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Pérdida ($)'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                return `Valor: ${context[0].label}`;
+                            },
+                            label: function(context) {
+                                return `Pérdida: $${context.formattedValue}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Función para calcular la pérdida de Taguchi (QLF) y actualizar la gráfica
+        function updateQLF() {
+            // Obtener valores de los inputs
+            const N = parseFloat(targetValueInput.value);
+            const LES = parseFloat(specLimitInput.value);
+            const C = parseFloat(costAtLimitInput.value);
+            const x = parseFloat(observedValueSlider.value);
+
+            // Validar entradas
+            if (isNaN(N) || isNaN(LES) || isNaN(C) || isNaN(x)) {
+                console.error("Entradas no válidas para la QLF.");
+                return;
+            }
+
+            // Calcular la constante de proporcionalidad 'k'
+            const delta0 = LES - N;
+            const k = C / (delta0 * delta0);
+
+            // Calcular la pérdida para el valor observado 'x'
+            const loss = k * Math.pow(x - N, 2);
+            lossValueDisplay.textContent = `$${loss.toFixed(2)}`;
+            
+            // Actualizar el valor del slider
+            observedValueLabel.textContent = x;
+
+            // Generar datos para la gráfica
+            const dataPoints = [];
+            const labels = [];
+            const start = N - delta0;
+            const end = N + delta0;
+
+            for (let i = start; i <= end; i += 0.1) {
+                labels.push(i.toFixed(1));
+                const lossValue = k * Math.pow(i - N, 2);
+                dataPoints.push(lossValue);
+            }
+
+            qlfChart.data.labels = labels;
+            qlfChart.data.datasets[0].data = dataPoints;
+            qlfChart.update();
+        }
+
+        // Escuchar cambios en los inputs del QLF
+        targetValueInput.addEventListener('input', updateQLF);
+        specLimitInput.addEventListener('input', updateQLF);
+        costAtLimitInput.addEventListener('input', updateQLF);
+        observedValueSlider.addEventListener('input', updateQLF);
+        
+        // ----------------------------------------------------
+        // Lógica para las pestañas de Tipos de Características
+        // ----------------------------------------------------
+
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Eliminar clase activa de todos los botones y contenidos
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.add('hidden'));
+
+                // Agregar clase activa al botón y contenido seleccionados
+                const tabId = button.dataset.tab;
+                button.classList.add('active');
+                document.getElementById(tabId).classList.remove('hidden');
+
+                // Recargar MathJax para que las fórmulas se rendericen correctamente
+                if (window.MathJax) {
+                    MathJax.typeset();
+                }
+            });
+        });
+
+        // ----------------------------------------------------
+        // Nuevas Fórmulas de la Descomposición de la Sumatoria de Cuadrados (SST, SSe, SSm)
+        // A partir de la imagen proporcionada por el usuario.
+        // ----------------------------------------------------
+
+        /**
+         * Calcula los componentes de la suma de cuadrados (SST, SSe, SSm)
+         * para los tres tipos de características de calidad según Taguchi.
+         * @param {string} type - El tipo de característica de calidad ('nominal', 'smaller', 'larger').
+         * @param {Array<number>} data - Un array de valores observados (y_i).
+         * @param {number} [target=0] - El valor nominal o ideal (y_0). Requerido para 'nominal'.
+         * @returns {{SST: number, SSe: number, SSm: number}} Los valores calculados.
+         */
+        function calculateTaguchiSumsOfSquares(type, data, target = 0) {
+            let sumOfSquaresTotal = 0;
+            let sumOfSquaresError = 0;
+            let sumOfSquaresMean = 0;
+            let n = data.length;
+
+            if (n === 0) {
+                return { SST: 0, SSe: 0, SSm: 0 };
+            }
+
+            switch (type) {
+                case 'nominal':
+                    // Nominal es Mejor
+                    let sumYiMinusY0 = 0;
+                    let sumYi = 0;
+
+                    for (let i = 0; i < n; i++) {
+                        sumOfSquaresTotal += Math.pow(data[i] - target, 2);
+                        sumYiMinusY0 += (data[i] - target);
+                        sumYi += data[i];
+                    }
+
+                    const yBar = sumYi / n;
+                    for (let i = 0; i < n; i++) {
+                        sumOfSquaresError += Math.pow(data[i] - yBar, 2);
+                    }
+                    sumOfSquaresMean = Math.pow(sumYiMinusY0, 2) / n;
+                    break;
+
+                case 'smaller':
+                    // Menor es Mejor
+                    let sumYiSmaller = 0;
+
+                    for (let i = 0; i < n; i++) {
+                        sumOfSquaresTotal += Math.pow(data[i], 2);
+                        sumYiSmaller += data[i];
+                    }
+
+                    const yBarSmaller = sumYiSmaller / n;
+                    for (let i = 0; i < n; i++) {
+                        sumOfSquaresError += Math.pow(data[i] - yBarSmaller, 2);
+                    }
+                    sumOfSquaresMean = Math.pow(sumYiSmaller, 2) / n;
+                    break;
+
+                case 'larger':
+                    // Mayor es Mejor
+                    let sumOneOverYi = 0;
+
+                    for (let i = 0; i < n; i++) {
+                        if (data[i] !== 0) {
+                            sumOfSquaresTotal += Math.pow(1 / data[i], 2);
+                            sumOneOverYi += (1 / data[i]);
+                        }
+                    }
+                    
+                    const oneOverYBar = sumOneOverYi / n;
+                    for (let i = 0; i < n; i++) {
+                        if (data[i] !== 0) {
+                            sumOfSquaresError += Math.pow((1 / data[i]) - oneOverYBar, 2);
+                        }
+                    }
+                    sumOfSquaresMean = Math.pow(sumOneOverYi, 2) / n;
+                    break;
+
+                default:
+                    console.error("Tipo de característica no válido.");
+                    break;
+            }
+
+            return {
+                SST: sumOfSquaresTotal,
+                SSe: sumOfSquaresError,
+                SSm: sumOfSquaresMean
+            };
+        }
+        
+        // Funciones para manejar los clics de los botones de cálculo
+        function calculateNominal() {
+            const dataInput = document.getElementById('nominalData').value;
+            const target = parseFloat(document.getElementById('nominalTarget').value);
+            const data = dataInput.split(',').map(Number);
+            
+            const results = calculateTaguchiSumsOfSquares('nominal', data, target);
+            
+            document.getElementById('nominal-SST').textContent = results.SST.toFixed(4);
+            document.getElementById('nominal-SSe').textContent = results.SSe.toFixed(4);
+            document.getElementById('nominal-SSm').textContent = results.SSm.toFixed(4);
+        }
+
+        function calculateSmaller() {
+            const dataInput = document.getElementById('smallerData').value;
+            const data = dataInput.split(',').map(Number);
+            
+            const results = calculateTaguchiSumsOfSquares('smaller', data);
+            
+            document.getElementById('smaller-SST').textContent = results.SST.toFixed(4);
+            document.getElementById('smaller-SSe').textContent = results.SSe.toFixed(4);
+            document.getElementById('smaller-SSm').textContent = results.SSm.toFixed(4);
+        }
+
+        function calculateLarger() {
+            const dataInput = document.getElementById('largerData').value;
+            const data = dataInput.split(',').map(Number);
+            
+            const results = calculateTaguchiSumsOfSquares('larger', data);
+            
+            document.getElementById('larger-SST').textContent = results.SST.toFixed(4);
+            document.getElementById('larger-SSe').textContent = results.SSe.toFixed(4);
+            document.getElementById('larger-SSm').textContent = results.SSm.toFixed(4);
+        }
+
+        // Inicializar la página al cargar
+        window.onload = function() {
+            updateQLF();
+            // Cargar MathJax en la pestaña inicial
+            if (window.MathJax) {
+                MathJax.typeset();
+            }
+        };
+    </script>
 </body>
 </html>
