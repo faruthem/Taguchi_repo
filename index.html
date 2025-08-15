@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Análisis de Calidad Taguchi</title>
-    <!-- Esta es la línea que importa tu archivo CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
-    <!-- El resto de tus scripts y otras etiquetas van aquí -->
 </head>
 <body class="bg-gray-100">
 
@@ -273,8 +273,8 @@
             const loss = k * Math.pow(x - N, 2);
             lossValueDisplay.textContent = `$${loss.toFixed(2)}`;
             
-            // Actualizar el valor del slider
-            observedValueLabel.textContent = x;
+            // Actualizar el valor del slider. Usamos toFixed(1) para mantener un decimal
+            observedValueLabel.textContent = x.toFixed(1);
 
             // Generar datos para la gráfica
             const dataPoints = [];
