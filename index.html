@@ -4,11 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Análisis de Calidad Taguchi</title>
-    <!-- Esta es la línea que importa tu archivo CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
-    <!-- El resto de tus scripts y otras etiquetas van aquí -->
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .section-title {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .tab-button.active {
+            color: #1a202c;
+            border-bottom-color: #4c51bf;
+            font-weight: 600;
+        }
+        .qlf-chart-container {
+            height: 400px;
+            width: 100%;
+        }
+        /* Style for LaTeX formulas */
+        .formula {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.25rem;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
     <!-- Main Container -->
     <div class="container bg-white rounded-xl shadow-lg mt-8 mb-8">
@@ -38,7 +63,7 @@
                         <input type="number" id="costAtLimit" value="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     </div>
                     <div class="pt-4">
-                        <label for="observedValueSlider" class="block text-sm font-medium text-gray-700">Valor Observado (<span id="observedValueLabel">10</span>)</label>
+                        <label for="observedValueSlider" class="block text-sm font-medium text-gray-700">Valor Observado (<span id="observedValueLabel">10.0</span>)</label>
                         <input type="range" id="observedValueSlider" min="8" max="12" step="0.1" value="10" class="mt-1 w-full">
                     </div>
                     <div class="text-center mt-4 p-4 bg-yellow-100 rounded-lg border border-yellow-200">
@@ -91,7 +116,7 @@
                     <!-- SSm Formula and input -->
                     <div class="bg-green-50 rounded-lg p-4 shadow-sm border border-green-200">
                         <h4 class="text-lg font-medium text-green-800">SSm</h4>
-                        <p class="text-gray-700 my-2 formula">$$\frac{(\sum_{i=1}^{n} (y_i - N))^2}{n}$$</p>
+                        <p class="text-gray-700 my-2 formula">$$n(\bar{y} - N)^2$$</p>
                         <p class="text-sm text-gray-500">Suma de cuadrados de la media, variación de la media general.</p>
                     </div>
                 </div>
@@ -129,7 +154,7 @@
                     <!-- SSm Formula and input -->
                     <div class="bg-green-50 rounded-lg p-4 shadow-sm border border-green-200">
                         <h4 class="text-lg font-medium text-green-800">SSm</h4>
-                        <p class="text-gray-700 my-2 formula">$$\frac{(\sum_{i=1}^{n} y_i)^2}{n}$$</p>
+                        <p class="text-gray-700 my-2 formula">$$n\bar{y}^2$$</p>
                         <p class="text-sm text-gray-500">Suma de cuadrados de la media, variación de la media general.</p>
                     </div>
                 </div>
@@ -165,7 +190,7 @@
                     <!-- SSm Formula and input -->
                     <div class="bg-green-50 rounded-lg p-4 shadow-sm border border-green-200">
                         <h4 class="text-lg font-medium text-green-800">SSm</h4>
-                        <p class="text-gray-700 my-2 formula">$$\frac{(\sum_{i=1}^{n} \frac{1}{y_i})^2}{n}$$</p>
+                        <p class="text-gray-700 my-2 formula">$$n(\frac{\sum \frac{1}{y_i}}{n})^2$$</p>
                         <p class="text-sm text-gray-500">Suma de cuadrados de la media, variación de la media general.</p>
                     </div>
                 </div>
@@ -273,8 +298,8 @@
             const loss = k * Math.pow(x - N, 2);
             lossValueDisplay.textContent = `$${loss.toFixed(2)}`;
             
-            // Actualizar el valor del slider
-            observedValueLabel.textContent = x;
+            // Actualizar el valor del slider. Usamos toFixed(1) para mantener un decimal
+            observedValueLabel.textContent = x.toFixed(1);
 
             // Generar datos para la gráfica
             const dataPoints = [];
@@ -330,12 +355,12 @@
         // ----------------------------------------------------
 
         /**
-         * Calcula los componentes de la suma de cuadrados (SST, SSe, SSm)
-         * para los tres tipos de características de calidad según Taguchi.
-         * @param {string} type - El tipo de característica de calidad ('nominal', 'smaller', 'larger').
-         * @param {Array<number>} data - Un array de valores observados (y_i).
-         * @param {number} [target=0] - El valor nominal o ideal (y_0). Requerido para 'nominal'.
-         * @returns {{SST: number, SSe: number, SSm: number}} Los valores calculados.
+         * Calculates the components of the sum of squares (SST, SSe, SSm)
+         * for the three types of quality characteristics according to Taguchi.
+         * @param {string} type - The type of quality characteristic ('nominal', 'smaller', 'larger').
+         * @param {Array<number>} data - An array of observed values (y_i).
+         * @param {number} [target=0] - The nominal or ideal value (y_0). Required for 'nominal'.
+         * @returns {{SST: number, SSe: number, SSm: number}} The calculated values.
          */
         function calculateTaguchiSumsOfSquares(type, data, target = 0) {
             let sumOfSquaresTotal = 0;
@@ -349,25 +374,23 @@
 
             switch (type) {
                 case 'nominal':
-                    // Nominal es Mejor
-                    let sumYiMinusY0 = 0;
+                    // Nominal is Better
                     let sumYi = 0;
 
                     for (let i = 0; i < n; i++) {
-                        sumOfSquaresTotal += Math.pow(data[i] - target, 2);
-                        sumYiMinusY0 += (data[i] - target);
                         sumYi += data[i];
                     }
 
                     const yBar = sumYi / n;
                     for (let i = 0; i < n; i++) {
+                        sumOfSquaresTotal += Math.pow(data[i] - target, 2);
                         sumOfSquaresError += Math.pow(data[i] - yBar, 2);
                     }
-                    sumOfSquaresMean = Math.pow(sumYiMinusY0, 2) / n;
+                    sumOfSquaresMean = n * Math.pow(yBar - target, 2);
                     break;
 
                 case 'smaller':
-                    // Menor es Mejor
+                    // Smaller is Better
                     let sumYiSmaller = 0;
 
                     for (let i = 0; i < n; i++) {
@@ -379,11 +402,11 @@
                     for (let i = 0; i < n; i++) {
                         sumOfSquaresError += Math.pow(data[i] - yBarSmaller, 2);
                     }
-                    sumOfSquaresMean = Math.pow(sumYiSmaller, 2) / n;
+                    sumOfSquaresMean = n * Math.pow(yBarSmaller, 2);
                     break;
 
                 case 'larger':
-                    // Mayor es Mejor
+                    // Larger is Better
                     let sumOneOverYi = 0;
 
                     for (let i = 0; i < n; i++) {
@@ -399,11 +422,11 @@
                             sumOfSquaresError += Math.pow((1 / data[i]) - oneOverYBar, 2);
                         }
                     }
-                    sumOfSquaresMean = Math.pow(sumOneOverYi, 2) / n;
+                    sumOfSquaresMean = n * Math.pow(oneOverYBar, 2);
                     break;
 
                 default:
-                    console.error("Tipo de característica no válido.");
+                    console.error("Invalid characteristic type.");
                     break;
             }
 
@@ -414,7 +437,7 @@
             };
         }
         
-        // Funciones para manejar los clics de los botones de cálculo
+        // Functions to handle calculation button clicks
         function calculateNominal() {
             const dataInput = document.getElementById('nominalData').value;
             const target = parseFloat(document.getElementById('nominalTarget').value);
@@ -449,10 +472,10 @@
             document.getElementById('larger-SSm').textContent = results.SSm.toFixed(4);
         }
 
-        // Inicializar la página al cargar
+        // Initialize the page on load
         window.onload = function() {
             updateQLF();
-            // Cargar MathJax en la pestaña inicial
+            // Load MathJax on the initial tab
             if (window.MathJax) {
                 MathJax.typeset();
             }
