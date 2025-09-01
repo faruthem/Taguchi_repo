@@ -1,0 +1,5 @@
+#Archivos de cache y logs
+*.log
+.cache/
+# Dependencias de Laravel
+/vendor
